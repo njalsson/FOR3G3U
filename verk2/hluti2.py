@@ -16,6 +16,9 @@ green = (0,255,0)
 blue = (0,0,255)
 purple = (100,0,230)
 running = True
+score = 0
+iscatbool = False
+mouse = pygame.draw.rect(gamescreen, blue, (40, 40, 35, 35), 0)
 smallfont = pygame.font.SysFont("monospace", 19)
 clock = pygame.time.Clock()
 while running:
@@ -40,9 +43,10 @@ while running:
 				currentmousepos = randint(1,64) # choosing where the mouse lives
 				iscat = randint(1,10)
 				if iscat != 1:
-					pygame.draw.rect(gamescreen, black, (currentwidth, currentheigth, 35, 35), 0)
+					mouse = pygame.draw.rect(gamescreen, blue, (currentwidth, currentheigth, 35, 35), 0)
 				else:
-					pygame.draw.rect(gamescreen, blue, (currentwidth, currentheigth, 35, 35), 0)
+					mouse = pygame.draw.rect(gamescreen, black, (currentwidth, currentheigth, 35, 35), 0)
+					iscatbool = True
 
 
 			else:
@@ -50,5 +54,12 @@ while running:
 			currentwidth += 40
 		currentheigth += 40
 
+	if mouse.collidepoint(pygame.mouse.get_pos()) and iscatbool:
+		score = 0
+	elif mouse.collidepoint(pygame.mouse.get_pos()) and not  iscatbool:
+		score += 1
+	scoretext = "score is {}".format(score)
+	scoretext2 = smallfont.render(scoretext, 1, black)
+	gamescreen.blit(scoretext2, (400, 50))
 	pygame.display.update()	
 quit()
