@@ -8,20 +8,21 @@ from pygame.locals import *
 
 class invaders:
 	def __init__(self,gamescreen,color):
-		self.y = random.randint(0, displaywidth - 60) # they can spawn anywhere on the screen
-		self.x = -40
+		self.y = -10
+		self.x = random.randint(0,580)# they can spawn anywhere on the screen
 		self.width = 30
 		self.height = 30
+		self.rect = pygame.Rect(self.x, self.y, self.width, self.height)
 		self.color = color # purple is the one
 		self.screen = gamescreen
 
 
 	def update(self): #change their location a little bit each frame
-		self.x = -1
-		self.y += random.randint(-1,1)
+		self.y = self.y + 1
+		self.x += random.randint(-1,1)
 
 	def draw(self):
-		pygame.draw.rect(self.gamescreen, self.color, (self.x, self.y, self.width, self.height), 0)
+		pygame.draw.rect(self.screen, self.color, (self.x,self.y, self.width, self.height), 0)
 	
 class rocket:
 	#setja inni sitt eigid skjal seinna
@@ -44,10 +45,19 @@ class rocket:
 		newbullet = bullet(self.screen, black, self.x, self.y)
 		self.arrayofbullets.append(newbullet)
 
-	def handle(self):
+	def handlebullets(self):
 		for x in self.arrayofbullets:
 			x.update()
 			x.draw()
+	def checkcollisionofbulletsandinvaders(self, arrayofinvaders):
+		# O(nm)
+		self.arrafofinvaders = arrayofinvaders
+		for x in self.arrayofbullets:
+			for y in self.arrayofinvaders:
+				pass
+
+		pass
+
 
 class bullet:
 	def __init__(self,gamescreen, black, x, y):
@@ -55,21 +65,24 @@ class bullet:
 		self.height = 5
 		self.x = x
 		self.y = y
+		self.rect = pygame.Rect(self.x, self.y, self.width, self.height)
 		self.screen = gamescreen
 		self.color = black
 
 	def update(self):
-		self.y -= 1
+		self.y -= 3
 
 	def draw(self):
 		pygame.draw.rect(self.screen, self.color, (self.x, self.y, self.width, self.height), 0)
-		
+	
 #main loop
 pygame.init()
 #constant variables
 displaywidth,  displayheight = 640,480
 gamescreen = pygame.display.set_mode((displaywidth,displayheight))
 pygame.display.set_caption('invaders')
+clock = pygame.time.Clock()
+
 
 #colors
 white = (255,255,255)
@@ -82,9 +95,10 @@ purple = (100,0,230)
 #creating the user rocket
 user = rocket(gamescreen, red)
 xdiff = 0
+arrafofinvaders = []
 running = True
 while running:
-	xdiff = 0
+	clock.tick(60)
 	for event in pygame.event.get():
 		#geta haett i leik
 		if event.type == pygame.QUIT:
@@ -98,18 +112,31 @@ while running:
 				user.shoot()
 			if event.key == pygame.K_a:
 				#faera user 5 til 10 px til vinstri
-				xdiff = 5
+				xdiff = -2
 				pass
 			if event.key == pygame.K_d:
-				xdiff = -5
+				xdiff = 2
 				#til haegri
 				pass
+			if event.key == pygame.K_s:
+				xdiff = 0
 
+	#10% chance evere frame that a invader spawnes
+	chance = random.randint(1,30)
+	if chance == 1:
+		#create a invader
+		#shitty random generator
+		invaderrect = 0
+		newinvader = invaders(gamescreen, purple)
+		arrafofinvaders.append(newinvader)
 
 	gamescreen.fill(white)
 	user.update(xdiff)
 	user.draw()
-	user.handle()
+	user.handlebullets()
+	for x in arrafofinvaders:
+		x.update()
+		x.draw()
 	pygame.display.update()
 
 pygame.quit()
