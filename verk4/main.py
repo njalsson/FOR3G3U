@@ -8,22 +8,32 @@ from pygame.locals import *
 
 class invaders:
 	def __init__(self,gamescreen,color):
+		self.image = pygame.image.load('pictures/sperm.png')
+		self.image = pygame.transform.rotate(self.image, 180)
 		self.y = -10
 		self.x = random.randint(0,580)# they can spawn anywhere on the screen
-		self.width = 30
-		self.height = 30
-		self.rect = pygame.Rect(self.x, self.y, self.width, self.height)
+		#self.width = 30
+		#self.height = 30
+		#self.rect = pygame.Rect(self.x, self.y, self.width, self.height)
 		self.color = color # purple is the one
 		self.screen = gamescreen
+		self.arrayofinvaders = []
 
+	def createInvader(self):
+		pass
 
 	def update(self): #change their location a little bit each frame
 		self.y = self.y + 1
 		self.x += random.randint(-1,1)
 
 	def draw(self):
-		pygame.draw.rect(self.screen, self.color, (self.x,self.y, self.width, self.height), 0)
-	
+		#pygame.draw.rect(self.screen, self.color, (self.x,self.y, self.width, self.height), 0)
+		self.screen.blit(self.image, (self.x, self.y))
+
+
+
+
+
 class rocket:
 	#setja inni sitt eigid skjal seinna
 	def __init__(self, gamescreen, red):
