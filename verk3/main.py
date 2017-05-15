@@ -19,11 +19,6 @@ class Player:
 	def draw(self):
 		pygame.draw.rect(self.screen, self.color, (self.x, self.y, self.width, self.height), 0)
 
-	def collision(self, ball):
-		self.currentball = pygame.Rect(self.x, self.y, self.width, self.height)
-
-
-
 class Ball:
 	def __init__(self, gamescreen, color):
 		self.xvol = 3
@@ -49,8 +44,6 @@ class Ball:
 	def draw(self):
 		pygame.draw.ellipse(self.screen, self.color, (self.x, self.y, self.width, self.height))
 
-	def rect(self):
-		return pygame.Rect(self.x, self.y, self.width, self. height)
 
 
 
@@ -86,9 +79,9 @@ while running:
 				running = False
 			if event.key == pygame.K_a:
 				#faera user 5 til 10 px til vinstri
-				xdiff = -20
+				xdiff = -35
 			if event.key == pygame.K_d:
-				xdiff = 20
+				xdiff = 35
 				#til haegri
 
 	gamescreen.fill(black)
@@ -96,9 +89,15 @@ while running:
 	scoretext2 = smallfont.render(scoretext, 1, white)
 	gamescreen.blit(scoretext2, (50, 50))
 
+
 	ball.update()
-	ballrect = ball.rect()
-	player.collision(ballrect)
+	ballrect = pygame.Rect(ball.x, ball.y, ball.width, ball.height)
+	playerrect = pygame.Rect(player.x, player.y, player.width, player.height)
+	if playerrect.colliderect(ballrect):
+		score+=1
+		ball.yvol *= -1
+	if(ball.y >= 460):
+		score = 0
 	player.update(xdiff)
 	player.draw()
 	ball.draw()
